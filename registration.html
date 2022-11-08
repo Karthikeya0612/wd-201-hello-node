@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<style>
+
+</style>
+
+<body>
+    <div class="max-w-lg mx-auto bg-blue-100 rounded-xl shadow-lg items-center mt-14 text-center">
+        <a class="text-center font-bold p-5" href="/project">&lt;- Back to Project</a>
+    </div>
+    <div class="p-20 max-w-lg mx-auto bg-blue-100 rounded-xl shadow-lg flex items-center mt-14">
+        <form action="/registration" id="userform">
+
+            <table class="mx-auto mt">
+                <tr>
+                    <td colspan="2">
+                        <p class="text-center font-bold text-xl p-5">Registration Form</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="text-lg p-2"><Label>Name</Label></td>
+                    <td class="text-lg p-2"><input type="text" value="" required id="name"
+                            class="rounded-lg border focus:border-blue-500 focus:outline-none"></td>
+                </tr>
+                <tr>
+                    <td class="text-lg p-2"><Label>Email</Label></td>
+                    <td class="text-lg p-2"><input type="email" value="" required id="email"
+                            class="rounded-lg border focus:border-blue-500 focus:outline-none"></td>
+                </tr>
+                <tr>
+                    <td class="text-lg p-2"><Label>Password</Label></td>
+                    <td class="text-lg p-2"><input type="password" value="" required id="password"
+                            class="rounded-lg border focus:border-blue-500 focus:outline-none"></td>
+                </tr>
+                <tr>
+                    <td class="text-lg p-2"><Label>Dob</Label></td>
+                    <td class="text-lg p-2"><input type="date" value="" required max="2004-01-01" min="1967-01-01"
+                            id="dob" class="rounded-lg border focus:border-blue-500 focus:outline-none"></td>
+                </tr>
+                <tr>
+                    <td class="text-lg p-2"><Label>Accepted terms?</Label></td>
+                    <td class="text-lg p-2"><input type="checkbox" value="" id="acceptTerms"></td>
+                </tr>
+                <tr>
+                    <td class="text-lg p-2 text-center" colspan="2"><button type="submit"
+                            class="bg-green-500 p-2 rounded-xl">Submit</button></td>
+                </tr>
+            </table>
+
+        </form>
+    </div>
+    <div class="mx-auto bg-blue-100 rounded-xl shadow-lg flex items-center mt-14">
+        <div class="mx-auto">
+            <h2 class="text-center font-bold text-xl p-5">Entries</h2>
+            <div id="user-entries"></div>
+        </div>
+    </div>
+    <script>
+        const userform = document.getElementById('userform')
+
+        const retrieveEntries = () => {
+            let entries = localStorage.getItem('user-entries')
+            if (entries) {
+                entries = JSON.parse(entries)
+            } else {
+                entries = []
+            }
+            return entries
+        }
+
+        const userEntries = retrieveEntries()
+
+        const displayEntries = () => {
+            const entries = retrieveEntries()
+
+            const tableEntries = entries.map((entry) => {
+                const nameCell = `<td class='border px-4 py-2'>${entry.name}</td>`
+                const emailCell = `<td class='border px-4 py-2'>${entry.email}</td>`
+                const passwordCell = `<td class='border px-4 py-2'>${entry.password}</td>`
+                const dobCell = `<td class='border px-4 py-2'>${entry.dob}</td>`
+                const acceptTermsCell = `<td class='border px-4 py-2'>${entry.acceptTerms}</td>`
+
+                const row = `<tr>${nameCell} ${emailCell} ${passwordCell} ${dobCell} ${acceptTermsCell}</tr>`
+                return row
+            }).join('\n')
+
+            const table = `<table class="table-auto w-full">
+    <tr>
+    <th class="px-4 py-2">Name</th>
+    <th class="px-4 py-2">Email</th>
+    <th class="px-4 py-2">Password</th>
+    <th class="px-4 py-2">Dob</th>
+    <th class="px-4 py-2">Accepted terms?</th>
+    </tr>${tableEntries} </table>`
+
+            const details = document.getElementById('user-entries')
+            details.innerHTML = table
+        }
+
+        const saveUserForm = (event) => {
+            event.preventDefault()
+            const name = document.getElementById('name').value
+            const email = document.getElementById('email').value
+            const password = document.getElementById('password').value
+            const dob = document.getElementById('dob').value
+            const acceptTerms = document.getElementById('acceptTerms').checked
+
+            const entry = {
+                name,
+                email,
+                password,
+                dob,
+                acceptTerms
+            }
+
+            userEntries.push(entry)
+
+            localStorage.setItem('user-entries', JSON.stringify(userEntries))
+            displayEntries()
+        }
+        userform.addEventListener('submit', saveUserForm)
+
+        displayEntries()
+
+    </script>
+
+</body>
+
+</html>

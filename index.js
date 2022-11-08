@@ -1,4 +1,4 @@
 const hello = () => {
-  console.log('hello node This is my first commit')
+  console.log('Hello Node.js!')
 }
 hello()
